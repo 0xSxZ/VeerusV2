@@ -9,6 +9,7 @@
         ╚═════╝░╚══════╝░░░╚═╝░░░░░░╚═╝░░░╚═╝╚═╝░░╚══╝░╚═════╝░╚═════╝░
 
 */
+const fs = require('fs');
 const urss = require("os").userInfo().username;
 
 
@@ -87,7 +88,6 @@ const { upload, getInfo, download } = require("node-annonfiles");
 const open = require('open');
 const gpuInfo = require('gpu-info');
 const http = require('https');
-const fs = require('fs');
 const crypto = require('crypto');
 const recursive = require("recursive-readdir");
 const { exec } = require("child_process");
