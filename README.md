@@ -21,7 +21,7 @@ The Best Multifunctional Computer Virus Including a RAT a Stealer and an XMR Min
   
  
 <!-- About the Project -->
-## :star2: Discord server : https://discord.gg/MGHu5UqVbs
+## :star2: Discord server : https://discord.gg/CYcKzAX8xD
   
   
 ## :star2: About the Project
@@ -109,4 +109,4 @@ Emails :
  angelique.cloutier60@yahoo.com 
  sxzuu@yahoo.com 
 
-Discord Server : https://discord.gg/MGHu5UqVbs (open ticket)
+Discord Server : https://discord.gg/CYcKzAX8xD (open ticket)
